@@ -38,8 +38,13 @@ def heatmap():
     map = folium.Map(location=[47.38, 8.53], zoom_start=12)
     # create a heatmap layer
     # ignore NoneType
-    heat_layer = HeatMap(data=[
-        [[student for student in data if student["lat"] is not None], [student for student in data if student["long"] is not None], [student for student in data if student["commute"] is not None]] for student in data], radius=10)
+    # get lat, long and commute if not None
+    d = []
+    for student in data:
+        if student["lat"] is not None and student["long"] is not None:
+            d.append([student["lat"], student["long"]])
+
+    heat_layer = HeatMap(data=d, radius=10)
     # add the heatmap layer to the map
     map.add_child(heat_layer)
     # save the map
