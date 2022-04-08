@@ -35,7 +35,7 @@ for row in range(2, sheet.max_row + 1):
 def heatmap():
     # create a heatmap for the commute time for every student
     # create a map
-    map = folium.Map(location=[47.38, 8.53], zoom_start=12)
+    map = folium.Map(location=[47.38, 8.53], zoom_start=12, blur=25)
     # create a heatmap layer
     # ignore NoneType
     # get lat, long and commute if not None
@@ -48,9 +48,12 @@ def heatmap():
     # add the heatmap layer to the map
     map.add_child(heat_layer)
     # save the map
-    map.save("heatmap.html")
+    map.save("index.html")
     # open the map in the browser
-    webbrowser.open("heatmap.html")
+    #webbrowser.open("heatmap.html")
 
 
 heatmap()
+
+
+# show commute time as heatmap
