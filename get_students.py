@@ -8,7 +8,7 @@ from geopy.exc import GeocoderTimedOut, GeocoderUnavailable
 path = 'dataset/students.xlsx'
 
 
-def get_students(path):
+def get_addresses(path):
     # load excel file
     wb = openpyxl.load_workbook(path)
     # get sheet
