@@ -2,10 +2,10 @@
 # read data from excel file
 import folium
 import shapely
+from scipy import interpolate
 from shapely.geometry.polygon import Polygon
 from folium import plugins
 from folium.plugins import HeatMap
-import matplotlib.pyplot as plt
 import webbrowser
 import openpyxl
 from visualize import distance
@@ -53,17 +53,20 @@ def heatmap():
     # save the map
     map.save("index.html")
     # open the map in the browser
-    #webbrowser.open("heatmap.html")
+    # webbrowser.open("heatmap.html")
 
 
 # show commute time as heatmap
 def commute_heatmap():
+
+    color = "red"
+
     # connect every lat, long to (47.31783342759546, 8.795774929882974)
     # create a map
     map = folium.Map(location=[47.31783342759546,
                      8.795774929882974], zoom_start=12)
 
-    #get all commute times
+    # get all commute times
     durations = {}
     commute_times = [student["commute"]
                      for student in data if student["commute"] is not None]
@@ -80,20 +83,34 @@ def commute_heatmap():
 
     # for every key in durations draw a line between the values
     for key in durations:
-        # get average distance of the values to 47.31783342759546, 8.795774929882974
-        dist = []
-        for coords in durations[key]:
-            dist.append(
-                distance(coords, (47.31783342759546, 8.795774929882974)))
-        avg_dist = sum(dist) / len(dist)
-        # draw a circle around 47.31783342759546, 8.795774929882974 with avg_dist as radius
-        circle = folium.Circle(
-            radius=avg_dist,
-            location=[47.31783342759546, 8.795774929882974],
-            color='#3186cc',
-            fill=False).add_to(map)
+        # if lenght is 1 draw a circle with distance as the radius and 47.31783342759546, 8.795774929882974 as the center
+        if len(durations[key]) == 1:
+            folium.Circle(location=(47.31783342759546, 8.795774929882974), radius=distance(
+                durations[key][0][0], durations[key][0][1], 47.31783342759546, 8.795774929882974), color=color).add_to(map)
+        elif len(durations[key]) == 2:
+            # use the average of the two lat, long as radius
+            radius = (distance(durations[key][0][0], durations[key][0][1], durations[key][1][0], durations[key][1][1]) + distance(
+                durations[key][0][0], durations[key][0][1], 47.31783342759546, 8.795774929882974)) / 2 * 1000
+            folium.Circle(
+                location=(47.31783342759546, 8.795774929882974), radius=radius, color=color).add_to(map)
+        else:
+            # calculate the convex hull of the points
+            hull = shapely.geometry.MultiPoint(durations[key]).convex_hull
+            x, y = hull.exterior.coords.xy
+            # convert to tuples
+            x = list(x)
+            y = list(y)
 
-    #save the map
+            # points = [(x[i], y[i])
+            #           for i in range(0, len(x))]
+            # # interpolate the points
+            f = interpolate.interp1d(x, y)
+
+            # draw a polygon
+            folium.Polygon(
+                locations=points, color=color, tooltip=key, width=).add_to(map)
+
+    # save the map
     map.save("index.html")
     # open the map in the browser
     webbrowser.open("index.html")
