@@ -2,7 +2,7 @@
 # read data from excel file
 import folium
 import shapely
-from scipy import interpolate
+import scipy
 from shapely.geometry.polygon import Polygon
 from folium import plugins
 from folium.plugins import HeatMap
@@ -100,11 +100,9 @@ def commute_heatmap():
             # convert to tuples
             x = list(x)
             y = list(y)
-
-            # points = [(x[i], y[i])
-            #           for i in range(0, len(x))]
-            # # interpolate the points
-            f = interpolate.interp1d(x, y)
+            points = [(x[i], y[i])
+                      for i in range(0, len(x))]
+            # interpolate the points
 
             # draw a polygon
             folium.Polygon(
