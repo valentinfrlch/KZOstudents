@@ -1,9 +1,10 @@
 # draw a heatmap for the commute time
 # read data from excel file
 import folium
+from folium import plugins
+from folium.plugins import HeatMap
 import matplotlib.pyplot as plt
 import webbrowser
-from re import T
 import openpyxl
 
 path = "dataset/students.xlsx"
@@ -32,27 +33,19 @@ for row in range(2, sheet.max_row + 1):
 
 
 def heatmap():
-    # connect students with same commute time
-    m = folium.Map(location=[47.33, 8.78], zoom_start=12)
-    for student in data:
-        # connect students with same commute time with a polygon
-        try:
-            folium.Polygon(
-                locations=[
-                    [student["lat"], student["long"]],
-                    [student["lat"], student["long"] + student["commute"]],
-                    [student["lat"] + student["commute"],
-                        student["long"] + student["commute"]],
-                    [student["lat"] + student["commute"], student["long"]]],
-                color='#3186cc',
-                fill=False).add_to(m)
-        except (ValueError, TypeError):
-            pass
-
-            # save map
-            m.save('map.html')
-            # open map
-            webbrowser.open('map.html')
+    # create a heatmap for the commute time for every student
+    # create a map
+    map = folium.Map(location=[47.38, 8.53], zoom_start=12)
+    # create a heatmap layer
+    # ignore NoneType
+    heat_layer = HeatMap(data=[
+        [[student for student in data if student["lat"] is not None], [student for student in data if student["long"] is not None], [student for student in data if student["commute"] is not None]] for student in data], radius=10)
+    # add the heatmap layer to the map
+    map.add_child(heat_layer)
+    # save the map
+    map.save("heatmap.html")
+    # open the map in the browser
+    webbrowser.open("heatmap.html")
 
 
 heatmap()
