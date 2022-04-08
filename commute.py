@@ -72,7 +72,6 @@ def mainloop():
         x = student["lat"]
         y = student["long"]
         time = get_time(get_station((x, y)))
-        print(time)
         # add time to student
         # write to excel file
         sheet['J' + str(data.index(student) + 2)].value = time
