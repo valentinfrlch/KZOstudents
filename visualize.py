@@ -101,6 +101,3 @@ def group(threshold=5):
     m.save('local_groups.html')
     # open map
     webbrowser.open('local_groups.html')
-
-
-group()
