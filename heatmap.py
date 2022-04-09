@@ -57,7 +57,7 @@ def heatmap():
 def commute_heatmap():
 
     APIKEY = "pk.eyJ1IjoidmFsZW50aW5mcmxjaCIsImEiOiJjazk4ZzQ3MHcwNmJqM3FybzJxMXh1d2U1In0.aGuJSQwT1ub9friABW4HpQ"
-    color = "red"
+    color = "#D1F0FF"
 
     # connect every lat, long to (47.31783342759546, 8.795774929882974)
     # create a map
@@ -89,7 +89,7 @@ def commute_heatmap():
             if len(durations[key]) == 1:
                 circles.append([key, folium.Circle(location=(47.31783342759546, 8.795774929882974), radius=distance(
                     durations[key][0][0], durations[key][0][1], 47.31783342759546, 8.795774929882974),
-                    color=color, opacity=0.1, fill=True, fillcolor="red", fill_opacity=0.1,
+                    color=color, opacity=0.1, fill=True, fillcolor=color, fill_opacity=0.1,
                     tooltip="commute time: " + str(key) + "min").add_to(map, name="commute time: " + str(key) + "min")])
             elif len(durations[key]) == 2:
                 # use the average of the two lat, long as radius
@@ -97,7 +97,7 @@ def commute_heatmap():
                     durations[key][0][0], durations[key][0][1], 47.31783342759546, 8.795774929882974)) / 2 * 1000
                 circles.append([key, folium.Circle(
                     location=(47.31783342759546, 8.795774929882974), radius=radius, color=color,
-                    opacity=0.1, fill=True, fillcolor="red", fill_opacity=0.1, tooltip="commute time: " + str(key) + "min")])
+                    opacity=0.1, fill=True, fillcolor=color, fill_opacity=0.1, tooltip="commute time: " + str(key) + "min")])
             else:
                 # calculate the convex hull of the points
                 hull = shapely.geometry.MultiPoint(durations[key]).convex_hull
@@ -111,7 +111,7 @@ def commute_heatmap():
 
                 # draw a polygon
                 polygons.append([key, folium.Polygon(
-                    locations=points, color=color, tooltip="commute time: " + str(key) + "min", width=1, opacity=0.3, fill=True, fillcolor="red", fill_opacity=0.1)])
+                    locations=points, color=color, tooltip="commute time: " + str(key) + "min", width=1, opacity=0.3, fill=True, fillcolor=color, fill_opacity=0.1)])
 
     # save the map
     heatmap().add_to(map, name="heatmap")
