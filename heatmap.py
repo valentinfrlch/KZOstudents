@@ -48,7 +48,7 @@ def heatmap():
         if student["lat"] is not None and student["long"] is not None:
             d.append([student["lat"], student["long"]])
 
-    heat_layer = HeatMap(data=d, blur=100, radius=50)
+    heat_layer = HeatMap(data=d, blur=100, radius=50, name="Heatmap")
     # add the heatmap layer to the map
     return heat_layer
 
