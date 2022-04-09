@@ -58,11 +58,12 @@ def commute_heatmap():
 
     APIKEY = "pk.eyJ1IjoidmFsZW50aW5mcmxjaCIsImEiOiJjazk4ZzQ3MHcwNmJqM3FybzJxMXh1d2U1In0.aGuJSQwT1ub9friABW4HpQ"
     color = "#D1F0FF"
+    center = [47.31783342759546, 8.795774929882974]
 
     # connect every lat, long to (47.31783342759546, 8.795774929882974)
     # create a map
-    map = folium.Map(location=[47.31783342759546,
-                     8.795774929882974], zoom_start=12, tiles='https://api.mapbox.com/styles/v1/valentinfrlch/cl1rnamlr000214t8kpkn0mev/tiles/256/{z}/{x}/{y}@2x?access_token=' + APIKEY, attr="mapbox", name="Map")
+    map = folium.Map(location=center, zoom_start=12,
+                     tiles='https://api.mapbox.com/styles/v1/valentinfrlch/cl1rnamlr000214t8kpkn0mev/tiles/256/{z}/{x}/{y}@2x?access_token=' + APIKEY, attr="mapbox", name="Map")
 
 
     # get all commute times
@@ -87,16 +88,16 @@ def commute_heatmap():
         if key in [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]:
             # if lenght is 1 draw a circle with distance as the radius and 47.31783342759546, 8.795774929882974 as the center
             if len(durations[key]) == 1:
-                circles.append([key, folium.Circle(location=(47.31783342759546, 8.795774929882974), radius=distance(
-                    durations[key][0][0], durations[key][0][1], 47.31783342759546, 8.795774929882974),
-                    color=color, opacity=0.1, fill=True, fillcolor=color, fill_opacity=0.1,
-                    tooltip="commute time: " + str(key) + "min").add_to(map, name="commute time: " + str(key) + "min")])
+                circles.append([key, folium.Circle(location=center, radius=distance(
+                    durations[key][0][0], durations[key][0][1], center[0], center[1]), color=color,
+                    opacity=0.1, fill=True, fillcolor=color, fill_opacity=0.1, tooltip="commute time: " + str(key) + "min")
+                    .add_to(map, name="commute time: " + str(key) + "min")])
             elif len(durations[key]) == 2:
                 # use the average of the two lat, long as radius
                 radius = (distance(durations[key][0][0], durations[key][0][1], durations[key][1][0], durations[key][1][1]) + distance(
-                    durations[key][0][0], durations[key][0][1], 47.31783342759546, 8.795774929882974)) / 2 * 1000
+                    durations[key][0][0], durations[key][0][1], center[0], center[1])) / 2 * 1000
                 circles.append([key, folium.Circle(
-                    location=(47.31783342759546, 8.795774929882974), radius=radius, color=color,
+                    location=center, radius=radius, color=color,
                     opacity=0.1, fill=True, fillcolor=color, fill_opacity=0.1, tooltip="commute time: " + str(key) + "min")])
             else:
                 # calculate the convex hull of the points
