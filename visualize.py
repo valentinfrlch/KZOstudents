@@ -1,5 +1,5 @@
 # read excel file
-from cv2 import threshold
+#from cv2 import threshold
 import openpyxl
 import folium
 import webbrowser
