@@ -122,9 +122,9 @@ def commute_heatmap():
     for i in range(len(polygons) - 1, -1, -1):
         polygons[i][1].add_to(map)
     folium.LayerControl(collapsed=False).add_to(map)
-    map.save("index.html")
+    map.save("new_test.html")
     # open the map in the browser
-    webbrowser.open("index.html")
+    webbrowser.open("new_test.html")
 
 
 commute_heatmap()
